@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* 
 # Env section
 ENV PG_REPO_KEY GPG-KEY-POSTGRESPRO
 ENV PG_MAJOR 9.6
-ENV PG_VERSION 9.6.2.1-1.jessie.pro
-ENV GOSU_VERSION 1.7
+ENV PG_VERSION 9.6.5.1-1.jessie.pro
+ENV GOSU_VERSION 1.10
 ENV LANG en_US.utf8
 
 # explicitly set user/group IDs
