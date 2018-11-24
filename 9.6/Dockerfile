@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* 
 ENV PG_REPO_KEY GPG-KEY-POSTGRESPRO
 ENV GPG_KEY B42F6819007F00F88E364FD4036A9C25BF357DD4
 ENV PG_MAJOR 9.6
-ENV PG_MINOR 10.1
+ENV PG_MINOR 10.2
 ENV PG_RELEASE $PG_MAJOR.$PG_MINOR
 ENV PG_VERSION $PG_RELEASE-1.stretch.pro
 ENV GOSU_VERSION 1.10
@@ -26,10 +26,10 @@ RUN set -x \
 	&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
 	&& wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
 	&& export GNUPGHOME="$(mktemp -d)" \
-	&& (gpg --keyserver ha.pool.sks-keyservers.net --recv-keys $GPG_KEY \
-		|| gpg --keyserver pgp.mit.edu --recv-keys $GPG_KEY \
-		|| gpg --keyserver keyserver.pgp.com --recv-keys $GPG_KEY) \
-	&& gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
+	&& (gpg --no-tty --keyserver ha.pool.sks-keyservers.net --recv-keys $GPG_KEY \
+		|| gpg --no-tty --keyserver pgp.mit.edu --recv-keys $GPG_KEY \
+		|| gpg --no-tty --keyserver keyserver.pgp.com --recv-keys $GPG_KEY) \
+	&& gpg --no-tty --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
 	&& wget --quiet -O - http://repo.postgrespro.ru/pgpro-$PG_MAJOR/keys/$PG_REPO_KEY | apt-key add - \
 	&& rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
 	&& chmod +x /usr/local/bin/gosu \
