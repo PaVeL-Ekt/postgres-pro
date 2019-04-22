@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* 
 ENV PG_REPO_KEY GPG-KEY-POSTGRESPRO
 ENV GPG_KEY B42F6819007F00F88E364FD4036A9C25BF357DD4
 ENV PG_MAJOR 10
-ENV PG_MINOR 6.1
+ENV PG_MINOR 7.1
 ENV PG_RELEASE $PG_MAJOR.$PG_MINOR
 ENV PG_VERSION $PG_RELEASE-1.stretch.pro
 ENV GOSU_VERSION 1.11
@@ -26,6 +26,7 @@ RUN set -x \
 	&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
 	&& wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
 	&& export GNUPGHOME="$(mktemp -d)" \
+	&& mkdir ~/.gnupg && echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf \
 	&& (gpg --no-tty --keyserver ha.pool.sks-keyservers.net --recv-keys $GPG_KEY \
 		|| gpg --no-tty --keyserver pgp.mit.edu --recv-keys $GPG_KEY \
 		|| gpg --no-tty --keyserver keyserver.pgp.com --recv-keys $GPG_KEY) \
