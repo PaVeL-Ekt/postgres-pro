@@ -24,10 +24,11 @@ RUN set -x \
 	&& apt-get install -y --no-install-recommends ca-certificates wget gnupg dirmngr lsb-release \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
-	&& wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
-	&& export GNUPGHOME="$(mktemp -d)" \
+	&& wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc"
+
+RUN export GNUPGHOME="$(mktemp -d)" \
 	&& mkdir ~/.gnupg && echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf \
-	&& (gpg --no-tty --keyserver ha.pool.sks-keyservers.net --recv-keys $GPG_KEY \
+	&& (gpg --no-tty --keyserver ipv4.pool.sks-keyservers.net --recv-keys $GPG_KEY \
 		|| gpg --no-tty --keyserver pgp.mit.edu --recv-keys $GPG_KEY \
 		|| gpg --no-tty --keyserver keyserver.pgp.com --recv-keys $GPG_KEY) \
 	&& gpg --no-tty --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
