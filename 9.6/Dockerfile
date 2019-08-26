@@ -1,17 +1,12 @@
 # vim:set ft=dockerfile:
-FROM debian:stretch
+FROM debian:stretch-slim
 
 # make the "en_US.UTF-8" locale so postgres will be utf-8 enabled by default
 RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
         && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 
 # Env section
-ENV PG_REPO_KEY GPG-KEY-POSTGRESPRO
-ENV GPG_KEY B42F6819007F00F88E364FD4036A9C25BF357DD4
 ENV PG_MAJOR 9.6
-ENV PG_MINOR 12.1
-ENV PG_RELEASE $PG_MAJOR.$PG_MINOR
-ENV PG_VERSION $PG_RELEASE-1.stretch.pro
 ENV GOSU_VERSION 1.11
 ENV LANG en_US.utf8
 
@@ -25,6 +20,9 @@ RUN set -x \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
 	&& wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc"
+
+ENV PG_REPO_KEY GPG-KEY-POSTGRESPRO
+ENV GPG_KEY B42F6819007F00F88E364FD4036A9C25BF357DD4
 
 RUN export GNUPGHOME="$(mktemp -d)" \
 	&& mkdir ~/.gnupg && echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf \
@@ -41,6 +39,11 @@ RUN export GNUPGHOME="$(mktemp -d)" \
 RUN mkdir /docker-entrypoint-initdb.d
 
 RUN mkdir /docker-entrypoint-init.d
+
+# Version env
+ENV PG_MINOR 13.1
+ENV PG_RELEASE $PG_MAJOR.$PG_MINOR
+ENV PG_VERSION $PG_RELEASE-1.stretch.pro
 
 # Install pgpro
 RUN echo "deb http://repo.postgrespro.ru/pgpro-archive/pgpro-$PG_RELEASE/debian $(lsb_release -cs) main" > /etc/apt/sources.list.d/postgrespro.list \
